@@ -26,27 +26,29 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
 @RequestMapping("/movies")
-@CrossOrigin({"*"})
+@CrossOrigin("*") // Simplificado
 public class MovieController {
-	
-	private static final Logger log = LoggerFactory.getLogger(MovieController.class);
-	
-	@Autowired
-	private MovieService movieService;
-	
 
-	@GetMapping("/list")
-    public MappingJacksonValue getUserByName(){
-        SimpleBeanPropertyFilter simpleBeanPropertyFilter =
-                SimpleBeanPropertyFilter.serializeAllExcept("functionMovie");
+    private final MovieService movieService; // Final = Inmutabilidad
 
-        FilterProvider filterProvider = new SimpleFilterProvider()
-                .addFilter("userFilter", simpleBeanPropertyFilter);
+    // Inyección por constructor: Spring la detecta automáticamente sin @Autowired
+    public MovieController(MovieService movieService) {
+        this.movieService = movieService;
+    }
 
-        List<Movie> movie = movieService.findAll();
-        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(movie);
-        mappingJacksonValue.setFilters(filterProvider);
+    @GetMapping
+    public ResponseEntity<List<MovieDTO>> findAll() {
+        List<Movie> movies = movieService.findAll();
+        
+        if (movies.isEmpty()) {
+            return ResponseEntity.noContent().build(); // Devuelve 204 si no hay pelis
+        }
 
-        return mappingJacksonValue;
+        // Convertimos la entidad a DTO (esto se puede hacer con MapStruct o streams)
+        List<MovieDTO> dtos = movies.stream()
+            .map(m -> new MovieDTO(m.getId(), m.getTitle())) 
+            .toList();
+
+        return ResponseEntity.ok(dtos); // Devuelve 200 con la lista
     }
 }

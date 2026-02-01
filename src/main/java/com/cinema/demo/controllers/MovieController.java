@@ -26,12 +26,11 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
 @RequestMapping("/movies")
-@CrossOrigin("*") // Simplificado
+@CrossOrigin("*") 
 public class MovieController {
 
-    private final MovieService movieService; // Final = Inmutabilidad
+    private final MovieService movieService; 
 
-    // Inyección por constructor: Spring la detecta automáticamente sin @Autowired
     public MovieController(MovieService movieService) {
         this.movieService = movieService;
     }
@@ -41,14 +40,12 @@ public class MovieController {
         List<Movie> movies = movieService.findAll();
         
         if (movies.isEmpty()) {
-            return ResponseEntity.noContent().build(); // Devuelve 204 si no hay pelis
+            return ResponseEntity.noContent().build(); 
         }
-
-        // Convertimos la entidad a DTO (esto se puede hacer con MapStruct o streams)
         List<MovieDTO> dtos = movies.stream()
             .map(m -> new MovieDTO(m.getId(), m.getTitle())) 
             .toList();
 
-        return ResponseEntity.ok(dtos); // Devuelve 200 con la lista
+        return ResponseEntity.ok(dtos); 
     }
 }

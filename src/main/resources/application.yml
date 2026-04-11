@@ -1,16 +1,16 @@
 spring:
       datasource:
-                url: jdbc:postgresql://aws-0-sa-east-1.pooler.supabase.com:6543/postgres?user=postgres.hhesurrrvjshwknsgckr&password=EsTaEsMiContra123
-                username: postgres.hhesurrrvjshwknsgckr
-                password: EsTaEsMiContra123
+#                url: jdbc:postgresql://aws-0-sa-east-1.pooler.supabase.com:6543/postgres?user=postgres.hhesurrrvjshwknsgckr&password=EsTaEsMiContra123
+#                username: postgres.hhesurrrvjshwknsgckr
+#                password: EsTaEsMiContra123
 
-#                url: jdbc:postgresql://localhost:5432/cinePop
-#                username: postgres
-#                password: whatisbeyond
+                url: jdbc:postgresql://localhost:5432/cinePop
+                username: postgres
+                password: 1234
 
                 driver-class-name: org.postgresql.Driver
       jpa:
-          database-platform: org.hibernate.dialect.PostgreSQLDialect
+        open-in-view: false
       data:
         web:
           pageable:

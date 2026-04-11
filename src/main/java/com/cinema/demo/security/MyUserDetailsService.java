@@ -38,16 +38,14 @@ public class MyUserDetailsService implements UserDetailsService{
 		log.info("this is the user: "+ username);
 		
 		Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-		
-		
+
 		for (Role role: user.getRoles()) {
-			
 			authorities.add(new SimpleGrantedAuthority(role.getAuthority()));
 		}
 		
 		System.out.println("this is the length: "+authorities.size());
 		
-		return new User(username, user.getPassword(), authorities);
+		return new User(username, user.getPassword(), authorities); //entrega a spring y hace la comparacion deh httprequest con el usuario traido de la base de datos, esto lo ahce con el bean PasswordEncoder que se configuró en SecurityConfig
 	}
 
 }

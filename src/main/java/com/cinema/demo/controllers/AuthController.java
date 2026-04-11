@@ -77,7 +77,7 @@ public class AuthController {
 		return ResponseEntity.ok().headers(headers).body(tokens);
 	}
 	
-	
+
 	
 	@PostMapping("/login")
 	public ResponseEntity<?> loginHandler(@RequestBody LoginCredentials body) {
@@ -86,7 +86,7 @@ public class AuthController {
 
 	        MyUser user = myUserService.findByUser(body.getUsername());
 
-	        this.authenticationManager.authenticate(authInputToken);
+	        this.authenticationManager.authenticate(authInputToken); // llama internamente a MyUserDetailsService.loadUserByUsername()
 
 	        HttpHeaders headers = new HttpHeaders();
 
@@ -106,3 +106,13 @@ public class AuthController {
 	}
 
 }
+
+/*authenticationManager.authenticate(token)
+        ↓
+llama a loadUserByUsername(username)
+        ↓
+trae el usuario de la BD
+        ↓
+				passwordEncoder.matches(passwordDelRequest, passwordDeLaBD)
+        ↓
+				ok → sigue  |  mal → lanza excepción*/

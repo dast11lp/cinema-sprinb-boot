@@ -26,27 +26,26 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
 @RequestMapping("/movies")
-@CrossOrigin({"*"})
+@CrossOrigin("*") 
 public class MovieController {
-	
-	private static final Logger log = LoggerFactory.getLogger(MovieController.class);
-	
-	@Autowired
-	private MovieService movieService;
-	
 
-	@GetMapping("/list")
-    public MappingJacksonValue getUserByName(){
-        SimpleBeanPropertyFilter simpleBeanPropertyFilter =
-                SimpleBeanPropertyFilter.serializeAllExcept("functionMovie");
+    private final MovieService movieService; 
 
-        FilterProvider filterProvider = new SimpleFilterProvider()
-                .addFilter("userFilter", simpleBeanPropertyFilter);
+    public MovieController(MovieService movieService) {
+        this.movieService = movieService;
+    }
 
-        List<Movie> movie = movieService.findAll();
-        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(movie);
-        mappingJacksonValue.setFilters(filterProvider);
+    @GetMapping
+    public ResponseEntity<List<MovieDTO>> findAll() {
+        List<Movie> movies = movieService.findAll();
+        
+        if (movies.isEmpty()) {
+            return ResponseEntity.noContent().build(); 
+        }
+        List<MovieDTO> dtos = movies.stream()
+            .map(m -> new MovieDTO(m.getId(), m.getTitle())) 
+            .toList();
 
-        return mappingJacksonValue;
+        return ResponseEntity.ok(dtos); 
     }
 }

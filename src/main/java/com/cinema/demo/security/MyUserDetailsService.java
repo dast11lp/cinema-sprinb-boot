@@ -33,7 +33,7 @@ public class MyUserDetailsService implements UserDetailsService{
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
 		
-		MyUser user = this.myUserService.findByUser(username);
+		MyUser user = this.myUserService.findByUser(username).orElse(null);
 		
 		log.info("this is the user: "+ username);
 		

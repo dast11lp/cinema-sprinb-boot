@@ -2,6 +2,7 @@ package com.cinema.demo.controllers;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,27 +54,35 @@ public class AuthController {
 	
 	@PostMapping("/register")
 	public ResponseEntity<?> registerHandler(@RequestBody MyUser user){
+
 		String encodedPass = this.passwordEncoder.encode(user.getPassword());
 		user.setPassword(encodedPass);
+
+		Optional<MyUser> userDB = myUserService.findByUser(user.getUsername());
+
+		if(userDB.isPresent()) {
+			return ResponseEntity.ok("El usuario ya existe.");
+		}
+
 		user = myUserService.save(user);
-		
-		
+
+
 		Role role = new Role();
 		role.setAuthority("ROLE_USER_" + user.getIdUser());
-		
+
 		role.setIdUser(user.getIdUser());
 
 		this.roleService.save(role);
-		
+
 		String token = this.jwtUtil.JwtGenerator(user.getUsername());
-		
+
 		HttpHeaders headers = new HttpHeaders();
-		
+
 		headers.set("Authorization", token);
-		
+
 		Map<String, String> tokens = new HashMap<>();
 		tokens.put("Authorization", token);
-		
+
 		return ResponseEntity.ok().headers(headers).body(tokens);
 	}
 	
@@ -84,7 +93,7 @@ public class AuthController {
 	    try {
 	        UsernamePasswordAuthenticationToken authInputToken = new UsernamePasswordAuthenticationToken(body.getUsername(), body.getPassword());
 
-	        MyUser user = myUserService.findByUser(body.getUsername());
+	        MyUser user = myUserService.findByUser(body.getUsername()).orElse(null);
 
 	        this.authenticationManager.authenticate(authInputToken); // llama internamente a MyUserDetailsService.loadUserByUsername()
 

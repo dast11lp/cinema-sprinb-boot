@@ -38,7 +38,7 @@ public class MyUserController {
 			return  new MyUser();
 		}
 		
-        return myUserService.findByUser(username);
+        return myUserService.findByUser(username).orElse(null);
 	}
 	
 	@PostMapping("/delete")

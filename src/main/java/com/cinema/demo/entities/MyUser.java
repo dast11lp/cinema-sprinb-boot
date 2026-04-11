@@ -3,6 +3,7 @@ package com.cinema.demo.entities;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -60,21 +61,21 @@ public class MyUser {
 	private String cellphoneNumber;
 	
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER) //porqué?? jajaja
 	@JoinColumn(name = "id_use")
 	private List<Role> roles;
 	
 //	@JsonIgnoreProperties({"myUser","hibernateLazyInitializer","handler"})
 //	@OneToMany(fetch = FetchType.LAZY, mappedBy = "myUser")
 //	private List<Reservation> reservations;
-	
-	
+
+	@JsonIgnore
 	@JsonIgnoreProperties({"myUser","hibernateLazyInitializer","handler"})
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "myUser")
 	private List<FunctionReservation> funReservation;
-	
-	
-	
+
+
+	@JsonIgnore
 	@JsonIgnoreProperties({"myUser","hibernateLazyInitializer","handler"})
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "myUser")
 	private List<Card> cards;

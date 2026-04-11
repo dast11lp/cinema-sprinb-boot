@@ -36,16 +36,16 @@ public class MovieController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MovieDTO>> findAll() {
+    public ResponseEntity<List<Movie>> findAll() {
         List<Movie> movies = movieService.findAll();
         
         if (movies.isEmpty()) {
             return ResponseEntity.noContent().build(); 
         }
-        List<MovieDTO> dtos = movies.stream()
-            .map(m -> new MovieDTO(m.getId(), m.getTitle())) 
+        List<Movie> datos = movies.stream()
+            .map(m -> new Movie())
             .toList();
 
-        return ResponseEntity.ok(dtos); 
+        return ResponseEntity.ok(datos);
     }
 }
